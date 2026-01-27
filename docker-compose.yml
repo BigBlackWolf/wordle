@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=S3cret
+      - POSTGRES_USER=wordle_user
+      - POSTGRES_DB=wordle_db
+volumes:
+  db_data:
