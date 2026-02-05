@@ -37,11 +37,16 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
+	// H2 Database (Testing)
+	testRuntimeOnly("com.h2database:h2")
+	testImplementation("com.h2database:h2")
+
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 }
 
 tasks.withType<Test> {

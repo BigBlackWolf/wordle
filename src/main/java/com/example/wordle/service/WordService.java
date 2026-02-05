@@ -8,6 +8,8 @@ import com.example.wordle.entity.WordPair;
 import com.example.wordle.repository.UserRepository;
 import com.example.wordle.repository.WordPairRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class WordService {
 
@@ -22,7 +25,8 @@ public class WordService {
     private final UserRepository userRepository;
 
     private User getCurrentUser() {
-        String username = "admin";
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info(String.format("Found user %s", username));
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
