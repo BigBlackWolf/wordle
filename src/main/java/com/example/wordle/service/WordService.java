@@ -5,6 +5,7 @@ import com.example.wordle.dto.BulkWordResponse;
 import com.example.wordle.dto.WordPairDTO;
 import com.example.wordle.entity.User;
 import com.example.wordle.entity.WordPair;
+import com.example.wordle.exception.NotFoundException;
 import com.example.wordle.repository.UserRepository;
 import com.example.wordle.repository.WordPairRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class WordService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info(String.format("Found user %s", username));
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Transactional

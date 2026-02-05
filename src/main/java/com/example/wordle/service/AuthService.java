@@ -4,6 +4,8 @@ import com.example.wordle.dto.AuthResponse;
 import com.example.wordle.dto.LoginRequest;
 import com.example.wordle.dto.SignupRequest;
 import com.example.wordle.entity.User;
+import com.example.wordle.exception.ConflictException;
+import com.example.wordle.exception.NotFoundException;
 import com.example.wordle.repository.UserRepository;
 import com.example.wordle.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +32,11 @@ public class AuthService {
     @Transactional
     public AuthResponse signup(SignupRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new ConflictException("Username already exists");
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new ConflictException("Email already exists");
         }
 
         User user = User.builder()
@@ -64,7 +66,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String token = jwtUtils.generateToken(userDetails);

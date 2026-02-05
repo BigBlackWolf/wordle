@@ -10,7 +10,7 @@
 
 - [ X ] **Create a `prod` Spring profile** — Add `application-prod.properties` with `ddl-auto=validate`, `show-sql=false`, and production-appropriate log levels. Activate via `SPRING_PROFILES_ACTIVE=prod` on EC2.
 - [ X ] **Change `ddl-auto` to `validate` in prod** — `update` silently mutates schema at startup. Use `validate` so the app fails fast if schema is out of sync. Run with `update` once locally against the prod DB to seed tables, then switch to `validate`.
-- [  ] **Add a global exception handler** — No `@ControllerAdvice` exists. Spring defaults can leak stack traces. Add one that returns clean JSON responses (status + message only).
+- [ X  ] **Add a global exception handler** — No `@ControllerAdvice` exists. Spring defaults can leak stack traces. Add one that returns clean JSON responses (status + message only).
 - [ X ] **Commit the HealthController** — `HealthController.java` is untracked. Needed for EC2 health checks.
 
 ## P2 — Deployment & infrastructure

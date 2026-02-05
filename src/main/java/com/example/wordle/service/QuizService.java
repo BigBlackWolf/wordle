@@ -5,6 +5,8 @@ import com.example.wordle.dto.QuizResultDTO;
 import com.example.wordle.dto.SpellCheckRequest;
 import com.example.wordle.entity.User;
 import com.example.wordle.entity.WordPair;
+import com.example.wordle.exception.BadRequestException;
+import com.example.wordle.exception.NotFoundException;
 import com.example.wordle.repository.UserRepository;
 import com.example.wordle.repository.WordPairRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class QuizService {
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public QuizQuestionDTO getMultipleChoiceQuestion(String questionLanguage) {
@@ -34,19 +36,19 @@ public class QuizService {
 
         long totalWords = wordPairRepository.countByUserId(user.getId());
         if (totalWords < 4) {
-            throw new RuntimeException("Need at least 4 word pairs to generate a quiz");
+            throw new BadRequestException("Need at least 4 word pairs to generate a quiz");
         }
 
         // Get random correct word
         WordPair correctWord = wordPairRepository.findRandomWordPairByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("No words found"));
+                .orElseThrow(() -> new NotFoundException("No words found"));
 
         // Get 3 random distractors
         List<WordPair> distractors = wordPairRepository.findRandomWordPairsExcluding(
                 user.getId(), correctWord.getId(), 3);
 
         if (distractors.size() < 3) {
-            throw new RuntimeException("Not enough words to generate quiz options");
+            throw new BadRequestException("Not enough words to generate quiz options");
         }
 
         List<String> options = new ArrayList<>();
@@ -94,7 +96,7 @@ public class QuizService {
                     }
                 })
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Word not found"));
+                .orElseThrow(() -> new NotFoundException("Word not found"));
 
         String correctAnswer;
         if ("UKRAINIAN".equalsIgnoreCase(request.getQuestionLanguage())) {
